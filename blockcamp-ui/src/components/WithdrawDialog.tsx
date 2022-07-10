@@ -12,7 +12,7 @@ import {
 import { parseEther } from "ethers/lib/utils";
 import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { createBankAccount, deposit, withdraw } from "../utils/bank";
+import { createBankAccount, deposit, SUPPORTED_TOKENS, withdraw } from "../utils/bank";
 import TokenSelect from "./TokenSelect";
 
 export default function WithdrawDialog({
@@ -24,7 +24,7 @@ export default function WithdrawDialog({
 }) {
   const [address, setAddress] = useState("");
   const [amount, setAmount] = useState("");
-  const [tokenAddress, setTokenAddress] = useState("");
+  const [tokenAddress, setTokenAddress] = useState(SUPPORTED_TOKENS[0].address);
   const [running, setRunning] = useState(false);
 
   const handleWithdraw = useCallback(async () => {
@@ -42,10 +42,18 @@ export default function WithdrawDialog({
   }, [signer, amount, bankAddress, tokenAddress]);
 
   useEffect(() => {
-    if (signer) {
+    if (signer && open) {
       signer.getAddress().then(address => setAddress(address))
     };
-  }, [signer]);
+  }, [signer, open]);
+
+  useEffect(() => {
+    if (!open) {
+      setAddress("")
+      setAmount("")
+      setTokenAddress(SUPPORTED_TOKENS[0].address)
+    }
+  }, [open])
 
   return (
     <Dialog open={open} onClose={handleClose}>

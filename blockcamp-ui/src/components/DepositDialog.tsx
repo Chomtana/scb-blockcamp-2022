@@ -9,9 +9,9 @@ import {
   TextField,
 } from "@mui/material";
 import { parseEther } from "ethers/lib/utils";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { createBankAccount, deposit } from "../utils/bank";
+import { createBankAccount, deposit, SUPPORTED_TOKENS } from "../utils/bank";
 import TokenSelect from "./TokenSelect";
 
 export default function DepositDialog({
@@ -23,7 +23,7 @@ export default function DepositDialog({
 }) {
   // const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
-  const [tokenAddress, setTokenAddress] = useState("");
+  const [tokenAddress, setTokenAddress] = useState(SUPPORTED_TOKENS[0].address);
   const [running, setRunning] = useState(false);
 
   const handleDeposit = useCallback(async () => {
@@ -39,6 +39,13 @@ export default function DepositDialog({
       setRunning(false);
     }
   }, [signer, amount, bankAddress, tokenAddress]);
+
+  useEffect(() => {
+    if (!open) {
+      setAmount("")
+      setTokenAddress(SUPPORTED_TOKENS[0].address)
+    }
+  }, [open])
 
   return (
     <Dialog open={open} onClose={handleClose}>

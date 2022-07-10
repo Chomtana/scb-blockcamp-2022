@@ -25,6 +25,7 @@ import CreateAccountDialog from "./components/CreateAccountDialog";
 import addressParse from "./utils/addressParse";
 import DepositDialog from "./components/DepositDialog";
 import WithdrawDialog from "./components/WithdrawDialog";
+import TransferDialog from "./components/TransferDialog";
 
 function App() {
   const signer = useSigner();
@@ -165,6 +166,14 @@ function App() {
         refreshData={refreshData}
         bankAddress={showWithdrawDialog}
       ></WithdrawDialog>
+
+      <TransferDialog
+        open={Boolean(showTransferDialog)}
+        handleClose={() => setShowTransferDialog(null)}
+        signer={signer}
+        refreshData={refreshData}
+        bankAddress={showTransferDialog}
+      ></TransferDialog>
     </Box>
   );
 }

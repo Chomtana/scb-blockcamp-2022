@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { createBankAccount } from "../utils/bank";
 
@@ -20,6 +20,12 @@ export default function CreateAccountDialog({ open, handleClose, signer, refresh
       setRunning(false);
     }
   }, [signer, name]);
+
+  useEffect(() => {
+    if (!open) {
+      setName("")
+    }
+  }, [open])
 
   return (
     <Dialog open={open} onClose={handleClose}>
