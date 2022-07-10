@@ -67,7 +67,7 @@ function App() {
         }
       }
     }
-  }, [address]);
+  }, [address, networkId]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -124,6 +124,32 @@ function App() {
                           {token.balance} {token.symbol}
                         </div>
                       ))}
+                    </Typography>
+
+                    <Typography marginTop={1}>
+                      <div>
+                        <a
+                          href={
+                            "https://goerli.etherscan.io/address/" +
+                            bankAccount.address
+                          }
+                          target="_blank"
+                        >
+                          View on Etherscan
+                        </a>
+                      </div>
+
+                      <div>
+                        <a
+                          href={
+                            "https://apeboard.finance/dashboard/" +
+                            bankAccount.address
+                          }
+                          target="_blank"
+                        >
+                          View on Apeboard
+                        </a>
+                      </div>
                     </Typography>
                   </CardContent>
 
