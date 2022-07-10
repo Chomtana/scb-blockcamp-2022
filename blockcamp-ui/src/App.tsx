@@ -17,6 +17,7 @@ import {
   Card,
   CardContent,
   CardActions,
+  CircularProgress,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import { useSigner } from "./hooks/useSigner";
@@ -35,17 +36,36 @@ function App() {
   const [bankAccounts, setBankAccounts] = useState<BankAccountData[]>([]);
 
   const [showCreateAccountDialog, setShowCreateAccountDialog] = useState(false);
-  const [showDepositDialog, setShowDepositDialog] = useState<string | null>(null);
-  const [showWithdrawDialog, setShowWithdrawDialog] = useState<string | null>(null);
-  const [showTransferDialog, setShowTransferDialog] = useState<string | null>(null);
+  const [showDepositDialog, setShowDepositDialog] = useState<string | null>(
+    null
+  );
+  const [showWithdrawDialog, setShowWithdrawDialog] = useState<string | null>(
+    null
+  );
+  const [showTransferDialog, setShowTransferDialog] = useState<string | null>(
+    null
+  );
+
+  const [loading, setLoading] = useState(true);
 
   const refreshData = useCallback(async () => {
+    setLoading(true);
     setBankAccounts(await getAllBankAccounts(address));
+    setLoading(false);
   }, [address]);
 
   useEffect(() => {
     if (address) {
-      refreshData();
+      if (networkId == 5) {
+        refreshData();
+      } else {
+        if (window.ethereum) {
+          window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x5" }],
+          });
+        }
+      }
     }
   }, [address]);
 
@@ -67,71 +87,81 @@ function App() {
           paddingBottom: 24,
         }}
       >
-        {connected && signer && address ? (
-          <div>
-            <Typography
-              variant="h4"
-              component="div"
-              sx={{ flexGrow: 1 }}
-              align="center"
-            >
-              My Accounts
-            </Typography>
-
-            {bankAccounts.map((bankAccount) => (
-              <Card
-                sx={{ minWidth: 275 }}
-                style={{ marginTop: 16 }}
-                key={bankAccount.address}
-              >
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>
-                    {bankAccount.name}
-                  </Typography>
-
-                  <Typography color="text.secondary" variant="body2">
-                    {addressParse(bankAccount.address)}
-                  </Typography>
-
-                  <Typography marginTop={1}>
-                    {bankAccount.tokens.map(token => <div>{token.balance} {token.symbol}</div>)}
-                  </Typography>
-                </CardContent>
-
-                <CardActions>
-                  <Button
-                    size="small"
-                    onClick={() => setShowDepositDialog(bankAccount.address)}
-                  >
-                    Deposit
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={() => setShowWithdrawDialog(bankAccount.address)}
-                  >
-                    Withdraw
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={() => setShowTransferDialog(bankAccount.address)}
-                  >
-                    Transfer
-                  </Button>
-                </CardActions>
-              </Card>
-            ))}
-
-            <div style={{ marginTop: 16 }}>
-              <Button
-                variant="contained"
-                fullWidth
-                size="large"
-                onClick={() => setShowCreateAccountDialog(true)}
-              >
-                + Create new account
-              </Button>
+        {connected && signer && address && networkId == 5 ? (
+          loading ? (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress />
             </div>
-          </div>
+          ) : (
+            <div>
+              <Typography
+                variant="h4"
+                component="div"
+                sx={{ flexGrow: 1 }}
+                align="center"
+              >
+                My Accounts
+              </Typography>
+
+              {bankAccounts.map((bankAccount) => (
+                <Card
+                  sx={{ minWidth: 275 }}
+                  style={{ marginTop: 16 }}
+                  key={bankAccount.address}
+                >
+                  <CardContent>
+                    <Typography variant="h5" gutterBottom>
+                      {bankAccount.name}
+                    </Typography>
+
+                    <Typography color="text.secondary" variant="body2">
+                      {addressParse(bankAccount.address)}
+                    </Typography>
+
+                    <Typography marginTop={1}>
+                      {bankAccount.tokens.map((token) => (
+                        <div>
+                          {token.balance} {token.symbol}
+                        </div>
+                      ))}
+                    </Typography>
+                  </CardContent>
+
+                  <CardActions>
+                    <Button
+                      size="small"
+                      onClick={() => setShowDepositDialog(bankAccount.address)}
+                    >
+                      Deposit
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={() => setShowWithdrawDialog(bankAccount.address)}
+                    >
+                      Withdraw
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={() => setShowTransferDialog(bankAccount.address)}
+                    >
+                      Transfer
+                    </Button>
+                  </CardActions>
+                </Card>
+              ))}
+
+              <div style={{ marginTop: 16 }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  size="large"
+                  onClick={() => setShowCreateAccountDialog(true)}
+                >
+                  + Create new account
+                </Button>
+              </div>
+            </div>
+          )
         ) : (
           <Typography
             variant="h5"
@@ -139,7 +169,7 @@ function App() {
             sx={{ flexGrow: 1 }}
             align="center"
           >
-            Please connect your wallet.
+            Please connect your wallet to Goerli testnet network.
           </Typography>
         )}
       </Container>
