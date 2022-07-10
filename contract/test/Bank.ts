@@ -139,11 +139,12 @@ describe("Bank", function () {
   });
 
   it("Should transfer fund to other account with fee", async function () {
+    const erc20Address = [erc20.address, erc20.address, erc20.address]
     const to = ["Bank 1A", "Bank 2A", "Bank 2B"];
     const amount = [parseEther("40"), parseEther("20"), parseEther("10")]
 
-    expect(bank1B.connect(owner2).batchTransfer(erc20.address, to, amount)).to.be.revertedWith("Not owner");
-    await bank1B.connect(owner1).batchTransfer(erc20.address, to, amount);
+    expect(bank1B.connect(owner2).batchTransfer(erc20Address, to, amount)).to.be.revertedWith("Not owner");
+    await bank1B.connect(owner1).batchTransfer(erc20Address, to, amount);
 
     expect(await erc20.balanceOf(bank1A.address)).to.equal(parseEther("40"));
     expect(await erc20.balanceOf(bank1B.address)).to.equal(parseEther("30"));

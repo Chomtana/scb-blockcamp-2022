@@ -93,6 +93,11 @@ module.exports = {
       chainId: 3,
       accounts: [privateKeyTest]
     },
+		rinkeby: {
+      url: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+      chainId: 4,
+      accounts: [privateKeyTest]
+    },
 		goerli: {
       url: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
       chainId: 5,

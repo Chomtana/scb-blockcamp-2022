@@ -44,14 +44,14 @@ contract BankAccount is Initializable {
     transfer(token, bank.getBankAccountAddressWithRequire(to), amount);
   }
 
-  function batchTransfer(IERC20 token, string[] calldata to, uint256[] calldata amount) public onlyOwner {
+  function batchTransfer(IERC20[] calldata token, string[] calldata to, uint256[] calldata amount) public onlyOwner {
     uint256 transferCount = to.length;
 
-    require(transferCount == amount.length, "Length mismatch");
+    require(transferCount == amount.length && transferCount == token.length, "Length mismatch");
 
     unchecked {
       for (uint256 i = 0; i < transferCount; i++) {
-        transfer(token, bank.getBankAccountAddressWithRequire(to[i]), amount[i]);
+        transfer(token[i], bank.getBankAccountAddressWithRequire(to[i]), amount[i]);
       }
     }
   }

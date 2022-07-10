@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { createweb3Modal } from "../hooks/web3Modal/createweb3Modal";
+import { createweb3Modal } from "../store/web3Modal/createweb3Modal";
 import {
   useConnectWallet,
   useDisconnectWallet,
-} from "../hooks/web3Modal/hooks";
+} from "../store/web3Modal/hooks";
+import Button from '@mui/material/Button';
+import addressParse from "../utils/addressParse";
 
 export default function ConnectWalletButton() {
   const { connectWallet, web3, address, networkId, connected } =
@@ -26,17 +28,19 @@ export default function ConnectWalletButton() {
   }, [web3Modal, connectWallet]);
 
   const disconnectWalletCallback = useCallback(() => {
-    disconnectWallet(web3, web3Modal);
+    if (window.confirm("Confirm logout of connected wallet?")) {
+      disconnectWallet(web3, web3Modal);
+    }
   }, [web3, web3Modal, disconnectWallet]);
 
   return (
-    <button
-      className="btn btn-primary"
+    <Button
+      color="inherit"
       onClick={() =>
         connected ? disconnectWalletCallback() : connectWalletCallback()
       }
     >
-      {connected ? address : "Connect wallet"}
-    </button>
+      {connected ? addressParse(address) : "Connect wallet"}
+    </Button>
   );
 }

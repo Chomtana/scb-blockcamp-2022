@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import web3ModalReducer from "../hooks/web3Modal/reducer";
+import web3ModalReducer from "./web3Modal/reducer";
 
 let devToolsExtension = (f) => f;
 

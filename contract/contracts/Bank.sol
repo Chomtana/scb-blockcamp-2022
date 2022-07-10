@@ -51,6 +51,10 @@ contract Bank is Ownable, IBank {
     return bankAccounts[owner].length;
   }
 
+  function getBankAccountNames(address owner) public view returns(string[] memory) {
+    return bankAccounts[owner];
+  }
+
   function getAllBankAccountAddresses(address owner) public view returns(address[] memory) {
     uint256 bankAccountsLength = bankAccounts[owner].length;
     address[] memory result = new address[](bankAccountsLength);
