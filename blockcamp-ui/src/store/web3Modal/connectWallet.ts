@@ -65,6 +65,7 @@ export function connectWallet(web3Modal) {
         data: { /*provider,*/ address, networkId }
       });
     } catch (error) {
+      console.error(error);
       dispatch({ type: HOME_CONNECT_WALLET_FAILURE });
     }
   };
